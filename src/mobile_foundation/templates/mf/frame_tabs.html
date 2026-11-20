@@ -1,0 +1,5 @@
+{#- Frame for top-level screens: top bar + bottom tab bar (3-5 destinations). Child sets `tabs` (list) and `active` (key), and fills `topbar`/`content`. -#}
+{% extends "mf/base.html" %}
+{% import "mf/macros.html" as mf %}
+{% block main_class %} mf-main--with-bar{% endblock %}
+{% block bottom %}{{ mf.tabbar(tabs, active) }}{% endblock %}

@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling>=1.27"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mobile-foundation"
+version = "0.1.0"
+description = "Mobile-first CSS tokens, component classes and Jinja macros built on documented touch/UX rules"
+requires-python = ">=3.12"
+dependencies = ["jinja2>=3.1.5,<4"]
+
+[project.optional-dependencies]
+fastapi = ["fastapi>=0.115,<1"]
+
+[dependency-groups]
+dev = ["pytest>=8.3,<10", "ruff>=0.11,<1", "fastapi>=0.115,<1", "httpx>=0.28,<1"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mobile_foundation"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

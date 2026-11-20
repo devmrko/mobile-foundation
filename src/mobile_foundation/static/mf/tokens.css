@@ -1,0 +1,65 @@
+/* Design tokens. Values follow docs/checklist.md; tests/test_css_rules.py enforces the numeric ones. */
+:root {
+  color-scheme: light dark;   /* native controls (checkbox, select) follow the theme */
+  --mf-target: 48px;          /* minimum touch target: Material 48dp, Apple 44pt, WCAG 2.5.5 44px */
+  --mf-target-gap: 8px;       /* minimum space between neighbouring targets */
+  --mf-font-input: 16px;      /* below 16px iOS Safari zooms the page on focus */
+  --mf-font-body: 17px;
+  --mf-font-small: 14px;
+  --mf-font-title: 22px;
+  --mf-line: 1.5;
+  --mf-space-1: 4px; --mf-space-2: 8px; --mf-space-3: 12px; --mf-space-4: 16px; --mf-space-5: 24px; --mf-space-6: 32px;
+  --mf-gutter: 16px;          /* side margin; no horizontal page scroll at 320px */
+  --mf-radius: 12px;
+  --mf-bar-h: 56px;
+  --mf-safe-top: env(safe-area-inset-top, 0px);
+  --mf-safe-bottom: env(safe-area-inset-bottom, 0px);
+
+  --mf-bg: #ffffff;
+  --mf-surface: #f4f5f7;
+  --mf-text: #1b1d21;
+  --mf-text-muted: #596070;
+  --mf-border: #cfd3da;
+  --mf-primary: #1f5eff;
+  --mf-on-primary: #ffffff;
+  --mf-ok: #0d6b36;
+  --mf-warn: #8a4b00;
+  --mf-bad: #a8201a;
+  --mf-info: #124aa8;
+  --mf-focus: #1f5eff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --mf-bg: #121316;
+    --mf-surface: #1d1f24;
+    --mf-text: #eceef2;
+    --mf-text-muted: #a9b0bd;
+    --mf-border: #3a3e47;
+    --mf-primary: #7fa2ff;
+    --mf-on-primary: #0b1020;
+    --mf-ok: #6fd596;
+    --mf-warn: #f0b36a;
+    --mf-bad: #ff8d86;
+    --mf-info: #8db4ff;
+    --mf-focus: #7fa2ff;
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --mf-bg: #121316;
+  --mf-surface: #1d1f24;
+  --mf-text: #eceef2;
+  --mf-text-muted: #a9b0bd;
+  --mf-border: #3a3e47;
+  --mf-primary: #7fa2ff;
+  --mf-on-primary: #0b1020;
+  --mf-ok: #6fd596;
+  --mf-warn: #f0b36a;
+  --mf-bad: #ff8d86;
+  --mf-info: #8db4ff;
+  --mf-focus: #7fa2ff;
+}
+:root[data-theme="light"] { color-scheme: light; }

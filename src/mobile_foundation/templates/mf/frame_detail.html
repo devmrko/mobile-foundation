@@ -1,0 +1,5 @@
+{#- Frame for drill-down screens: back arrow top bar, no tab bar, optional fixed action bar in the `actions` block. -#}
+{% extends "mf/base.html" %}
+{% import "mf/macros.html" as mf %}
+{% block main_class %}{% if self.actions()|trim %} mf-main--with-bar{% endif %}{% endblock %}
+{% block bottom %}{% if self.actions()|trim %}<div class="mf-actionbar">{% block actions %}{% endblock %}</div>{% endif %}{% endblock %}

@@ -1,0 +1,108 @@
+{#- Screen components. Each macro emits the classes from static/mf/components.css; markup stays plain HTML so React can mirror it. -#}
+
+
+{# Line icons drawn on a 24px grid; stroke follows currentColor so they theme with the text. #}
+{% macro icon(name) -%}
+<svg class="mf-icon" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+{%- if name == "plus" %}<circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/>
+{%- elif name == "book" %}<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/>
+{%- elif name == "sliders" %}<path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>
+{%- elif name == "check" %}<path d="m5 12.5 4.5 4.5L19 7.5"/>
+{%- elif name == "external" %}<path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>
+{%- elif name == "refresh" %}<path d="M20 11a8 8 0 0 0-14-4.5L4 9M4 4v5h5M4 13a8 8 0 0 0 14 4.5L20 15M20 20v-5h-5"/>
+{%- endif %}</svg>
+{%- endmacro %}
+
+{% macro topbar(title, back_url=None, back_label="뒤로") -%}
+<header class="mf-topbar">
+  {%- if back_url %}<a class="mf-topbar__back" href="{{ back_url }}" aria-label="{{ back_label }}">←</a>{% endif %}
+  <h1 class="mf-topbar__title">{{ title }}</h1>
+  {{ caller() if caller else "" }}
+</header>
+{%- endmacro %}
+
+{% macro button(label, kind="secondary", href=None, type="button", block=False, disabled=False) -%}
+{%- set cls = "mf-btn mf-btn--" ~ kind ~ (" mf-btn--block" if block else "") -%}
+{%- if href %}<a class="{{ cls }}" href="{{ href }}"{% if disabled %} aria-disabled="true"{% endif %}>{{ label }}</a>
+{%- else %}<button class="{{ cls }}" type="{{ type }}"{% if disabled %} disabled{% endif %}>{{ label }}</button>{% endif -%}
+{%- endmacro %}
+
+{% macro field(name, label, type="text", value="", hint=None, error=None, placeholder="", inputmode=None, autocomplete=None, required=False) -%}
+<div class="mf-field">
+  <label class="mf-label" for="f-{{ name }}">{{ label }}</label>
+  <input class="mf-input" id="f-{{ name }}" name="{{ name }}" type="{{ type }}" value="{{ value }}" placeholder="{{ placeholder }}"
+    {%- if inputmode %} inputmode="{{ inputmode }}"{% endif %}{% if autocomplete %} autocomplete="{{ autocomplete }}"{% endif %}
+    {%- if required %} required{% endif %}{% if error %} aria-invalid="true" aria-describedby="e-{{ name }}"{% elif hint %} aria-describedby="h-{{ name }}"{% endif %}>
+  {%- if error %}<p class="mf-error" id="e-{{ name }}">{{ error }}</p>{% elif hint %}<p class="mf-hint" id="h-{{ name }}">{{ hint }}</p>{% endif %}
+</div>
+{%- endmacro %}
+
+{% macro row(title, meta=None, href=None, trailing=None, thumb=None) -%}
+{%- if href %}<a class="mf-row" href="{{ href }}">{% else %}<div class="mf-row">{% endif %}
+  {%- if thumb %}<img class="mf-row__thumb" src="{{ thumb }}" alt="" loading="lazy" width="96" height="54">{% endif %}
+  <span class="mf-row__body"><span class="mf-row__title">{{ title }}</span>{% if meta %}<span class="mf-row__meta">{{ meta }}</span>{% endif %}</span>
+  {%- if trailing %}{{ trailing }}{% endif %}{% if href %}<span class="mf-row__chev" aria-hidden="true">›</span>{% endif %}
+{% if href %}</a>{% else %}</div>{% endif -%}
+{%- endmacro %}
+
+{% macro check_row(name, title, meta=None, checked=False, aside=None) -%}
+<label class="mf-check">
+  <input type="checkbox" name="{{ name }}"{% if checked %} checked{% endif %}>
+  <span class="mf-row__body"><span class="mf-row__title">{{ title }}</span>{% if meta %}<span class="mf-row__meta">{{ meta }}</span>{% endif %}</span>
+  {%- if aside %}<span class="mf-row__aside">{{ aside }}</span>{% endif %}
+</label>
+{%- endmacro %}
+
+{# Badge text always carries the meaning; colour only reinforces it. #}
+{% macro badge(text, tone="info", icon="") -%}
+<span class="mf-badge mf-badge--{{ tone }}">{% if icon %}<span aria-hidden="true">{{ icon }}</span>{% endif %}{{ text }}</span>
+{%- endmacro %}
+
+{% macro notice(tone="info") -%}
+<div class="mf-notice mf-notice--{{ tone }}" role="{{ 'alert' if tone == 'bad' else 'status' }}"><div class="mf-notice__text">{{ caller() }}</div></div>
+{%- endmacro %}
+
+{% macro details(summary, open=False) -%}
+<details class="mf-details"{% if open %} open{% endif %}><summary>{{ summary }}</summary><div class="mf-details__body">{{ caller() }}</div></details>
+{%- endmacro %}
+
+{% macro card() -%}<section class="mf-card">{{ caller() }}</section>{%- endmacro %}
+
+{% macro steps(items) -%}
+<ol class="mf-steps">{% for item in items %}<li>{{ item }}</li>{% endfor %}</ol>
+{%- endmacro %}
+
+{% macro progress(value, label="진행") -%}
+<div class="mf-progress" role="progressbar" aria-label="{{ label }}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="{{ value }}"><span style="width: {{ value }}%"></span></div>
+{%- endmacro %}
+
+{% macro skeleton_lines(n=3) -%}
+<div class="mf-stack-sm" aria-hidden="true">{% for i in range(n) %}<div class="mf-skeleton" style="width: {{ 100 - (i * 15) }}%"></div>{% endfor %}</div>
+{%- endmacro %}
+
+{% macro empty(text) -%}<div class="mf-empty">{{ text }}</div>{%- endmacro %}
+
+{% macro youtube(video_id, title="영상") -%}
+<div class="mf-video"><iframe src="https://www.youtube-nocookie.com/embed/{{ video_id }}" title="{{ title }}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+{%- endmacro %}
+
+{# 3-5 destinations (Material 3, Apple HIG). Each item: {key, href, label, icon}; icon is a name from `icon`. #}
+{% macro tabbar(items, active) -%}
+<nav class="mf-tabbar" aria-label="주요 메뉴">{% for item in items %}
+  <a class="mf-tab" href="{{ item.href }}"{% if item.key == active %} aria-current="page"{% endif %}>{{ icon(item.icon) }}<span>{{ item.label }}</span></a>{% endfor %}
+</nav>
+{%- endmacro %}
+
+{% macro actionbar() -%}<div class="mf-actionbar">{{ caller() }}</div>{%- endmacro %}
+
+{# Section heading with an accent bar; use between the big blocks of a page. #}
+{% macro section_title(text) -%}<h2 class="mf-section-title">{{ text }}</h2>{%- endmacro %}
+
+{# CSS-only segmented control. Pass the labels; the caller body holds one `.mf-seg__panel` per label, in order (max 4). #}
+{% macro segmented(id, labels) -%}
+<div class="mf-seg">
+  {%- for label in labels %}<input class="mf-seg__input" type="radio" name="{{ id }}" id="{{ id }}-{{ loop.index }}"{% if loop.first %} checked{% endif %}>{% endfor %}
+  <div class="mf-seg__bar">{% for label in labels %}<label for="{{ id }}-{{ loop.index }}">{{ label }}</label>{% endfor %}</div>
+  <div class="mf-seg__panels">{{ caller() }}</div>
+</div>
+{%- endmacro %}

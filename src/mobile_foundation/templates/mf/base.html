@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="{{ lang|default('ko') }}">
+<head>
+  <meta charset="utf-8">
+  {# viewport-fit=cover enables safe-area insets; zoom is NOT disabled #}
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>{% block title %}{{ title|default('App') }}{% endblock %}</title>
+  <link rel="stylesheet" href="{{ static_url|default('/static/mf') }}/mobile.css">
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <div class="mf-app">
+    {% block topbar %}{% endblock %}
+    <main class="mf-main{% block main_class %}{% endblock %}">{% block content %}{% endblock %}</main>
+    {% block bottom %}{% endblock %}
+  </div>
+</body>
+</html>

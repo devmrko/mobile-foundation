@@ -20,6 +20,9 @@
   {% call mf.details("자세히 보기") %}양은 영상에서 말한 그대로예요.{% endcall %}
   <h2>단계</h2>
   {{ mf.steps(["냄비에 물 500ml를 붓습니다.", "떡을 넣고 끓입니다."]) }}
+  {{ mf.steps(["설정을 엽니다.", "주소를 붙여 넣습니다."], compact=True) }}
+  <h2>복사</h2>
+  {{ mf.copy_field("demo-url", "https://example.com/mcp", "연결 주소", "앱의 커넥터 설정에 붙여 넣습니다.") }}
   <h2>진행·로딩</h2>
   {{ mf.progress(60, "추출 진행") }}
   {{ mf.skeleton_lines(3) }}

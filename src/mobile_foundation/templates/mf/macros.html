@@ -9,6 +9,7 @@
 {%- elif name == "sliders" %}<path d="M4 7h9M17 7h3M4 17h3M11 17h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>
 {%- elif name == "check" %}<path d="m5 12.5 4.5 4.5L19 7.5"/>
 {%- elif name == "external" %}<path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/>
+{%- elif name == "copy" %}<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a1 1 0 0 1 1-1h10"/>
 {%- elif name == "refresh" %}<path d="M20 11a8 8 0 0 0-14-4.5L4 9M4 4v5h5M4 13a8 8 0 0 0 14 4.5L20 15M20 20v-5h-5"/>
 {%- endif %}</svg>
 {%- endmacro %}
@@ -68,8 +69,9 @@
 
 {% macro card() -%}<section class="mf-card">{{ caller() }}</section>{%- endmacro %}
 
-{% macro steps(items) -%}
-<ol class="mf-steps">{% for item in items %}<li>{{ item }}</li>{% endfor %}</ol>
+{# compact=True: short how-to steps (settings, setup guides) without a card per step. #}
+{% macro steps(items, compact=False) -%}
+<ol class="mf-steps{{ ' mf-steps--compact' if compact }}">{% for item in items %}<li>{{ item }}</li>{% endfor %}</ol>
 {%- endmacro %}
 
 {% macro progress(value, label="진행") -%}
@@ -105,4 +107,30 @@
   <div class="mf-seg__bar">{% for label in labels %}<label for="{{ id }}-{{ loop.index }}">{{ label }}</label>{% endfor %}</div>
   <div class="mf-seg__panels">{{ caller() }}</div>
 </div>
+{%- endmacro %}
+
+
+{# Read-only value with a copy button (URL, command). If the clipboard API is blocked, the text is selected instead. #}
+{% macro copy_field(id, value, label, hint=None) -%}
+<div class="mf-field">
+  <label class="mf-label" for="{{ id }}">{{ label }}</label>
+  <div class="mf-copy">
+    <input class="mf-input mf-input--mono" id="{{ id }}" type="text" value="{{ value }}" readonly spellcheck="false">
+    <button class="mf-btn mf-btn--primary" type="button" data-mf-copy="{{ id }}">{{ icon("copy") }}<span>복사</span></button>
+  </div>
+  <p class="mf-hint" id="{{ id }}-status" aria-live="polite">{{ hint or "" }}</p>
+</div>
+<script>
+if (!window.mfCopyReady) {
+  window.mfCopyReady = true;
+  document.addEventListener("click", async (event) => {
+    const button = event.target.closest("[data-mf-copy]");
+    if (!button) return;
+    const input = document.getElementById(button.dataset.mfCopy);
+    const status = document.getElementById(input.id + "-status");
+    try { await navigator.clipboard.writeText(input.value); status.textContent = "복사했습니다."; }
+    catch { input.focus(); input.select(); status.textContent = "선택된 내용을 복사하세요."; }
+  });
+}
+</script>
 {%- endmacro %}

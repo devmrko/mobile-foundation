@@ -139,3 +139,14 @@ a.mf-row, button.mf-row { cursor: pointer; }
 .mf-actionbar > form { display: flex; margin: 0; }
 .mf-actionbar .mf-btn { width: 100%; padding: 0 var(--mf-space-3); }
 .mf-btn .mf-icon { width: 20px; height: 20px; flex: none; }
+
+/* ---- Copy field: read-only value + copy button on one line ---- */
+.mf-copy { display: flex; gap: var(--mf-target-gap); }
+.mf-copy > .mf-input { flex: 1; min-width: 0; }
+.mf-copy > .mf-btn { flex: none; padding: 0 var(--mf-space-4); }
+.mf-input--mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; text-overflow: ellipsis; background: var(--mf-surface); }
+
+/* ---- Compact steps: numbered how-to inside a card ---- */
+.mf-steps--compact { gap: var(--mf-space-3); }
+.mf-steps--compact > li { padding: 0; border: 0; font-size: var(--mf-font-body); align-items: flex-start; }
+.mf-steps--compact > li::before { width: 24px; height: 24px; margin-top: 1px; font-size: 13px; }

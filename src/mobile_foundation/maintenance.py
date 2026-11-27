@@ -12,7 +12,7 @@ import zipfile
 from importlib import import_module
 from pathlib import Path
 
-BUNDLE_VERSION = "1.0.0"
+BUNDLE_VERSION = "1.0.1"
 ASSETS = Path(__file__).with_name("maintenance_assets")
 
 

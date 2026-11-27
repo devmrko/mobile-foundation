@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.3.1 - 2026-11-27
+
+- Update the portable maintenance probe to avoid reverse DNS in its loopback fixture, allow cold process startup and report early process exits.
+
+
 ## 0.3.0 - 2026-11-27
 
 - Add independent maintenance HTML / API JSON 503, planned maintenance flags and reusable Nginx configuration from mobile-foundation's pinned portable bundle.

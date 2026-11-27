@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from mobile_foundation.maintenance import bundle, export
+from mobile_foundation.maintenance_probe import SERVER, free_port, stop, wait_port
 
 
 def test_portable_bundle_is_deterministic_and_independent(tmp_path):
@@ -77,3 +78,22 @@ def test_container_paths_and_dependency_lock_reject_tampering(tmp_path):
     )
     assert result.returncode != 0 and b"SHA-256" in result.stderr
     assert not (tmp_path / "bad").exists()
+
+
+def test_loopback_fixture_never_needs_dns(tmp_path):
+    port = free_port()
+    no_dns = "import socket\ndef forbidden(*args): raise AssertionError('DNS must not be called')\nsocket.getfqdn = forbidden\n"
+    process = subprocess.Popen([sys.executable, "-c", no_dns + SERVER, str(port), str(tmp_path / "writes")])
+    try:
+        wait_port(port, process)
+    finally:
+        stop(process)
+
+
+def test_startup_check_reports_child_exit():
+    process = subprocess.Popen([sys.executable, "-c", "raise SystemExit(23)"])
+    try:
+        with pytest.raises(AssertionError, match="exit 23"):
+            wait_port(free_port(), process)
+    finally:
+        stop(process)

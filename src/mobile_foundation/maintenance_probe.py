@@ -16,7 +16,13 @@ from pathlib import Path
 SERVER = """
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from pathlib import Path
+from socketserver import TCPServer
 import sys, time
+class LocalHTTPServer(HTTPServer):
+    def server_bind(self):
+        TCPServer.server_bind(self)
+        self.server_name = 'localhost'
+        self.server_port = self.server_address[1]
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, *args): pass
     def do_GET(self):
@@ -31,8 +37,8 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         with Path(sys.argv[2]).open('a') as log: log.write('POST\\n')
         self.send_response(201); self.end_headers()
-HTTPServer.allow_reuse_address = True
-HTTPServer(('127.0.0.1', int(sys.argv[1])), Handler).serve_forever()
+LocalHTTPServer.allow_reuse_address = True
+LocalHTTPServer(('127.0.0.1', int(sys.argv[1])), Handler).serve_forever()
 """
 
 
@@ -42,9 +48,11 @@ def free_port() -> int:
         return int(sock.getsockname()[1])
 
 
-def wait_port(port: int) -> None:
-    deadline = time.monotonic() + 8
+def wait_port(port: int, process: subprocess.Popen[bytes] | None = None) -> None:
+    deadline = time.monotonic() + 30
     while time.monotonic() < deadline:
+        if process is not None and process.poll() is not None:
+            raise AssertionError(f"process exited before listening on {port}: exit {process.returncode}")
         try:
             with socket.create_connection(("127.0.0.1", port), timeout=0.2):
                 return
@@ -109,12 +117,12 @@ def verify(nginx: str, exporter: Callable[[Path, str, str, str, int | None], Non
                 assert json.loads(body)["code"] == "SERVICE_UNAVAILABLE"
 
         try:
-            wait_port(app_port)
+            wait_port(app_port, app)
             command = [executable, "-p", str(target) + "/", "-e", "stderr", "-c", str(target / "nginx.conf")]
             subprocess.run([*command, "-t"], check=True)
             with (root / "nginx-output.log").open("wb") as output:
                 edge = subprocess.Popen([*command, "-g", "daemon off;"], stdout=output, stderr=output)
-            wait_port(edge_port)
+            wait_port(edge_port, edge)
             assert request()[0] == 200
             assert request("/business")[2] == b'{"business":"unchanged"}'
             assert request("/business")[0] == 503  # application error is not replaced
@@ -138,7 +146,7 @@ def verify(nginx: str, exporter: Callable[[Path, str, str, str, int | None], Non
                 "application/problem+json"
             )
             app = subprocess.Popen([sys.executable, "-c", SERVER, str(app_port), str(log)])
-            wait_port(app_port)
+            wait_port(app_port, app)
             assert request()[0] == 200
             (target / "maintenance.flag").touch()
             unavailable()

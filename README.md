@@ -13,7 +13,7 @@ mobile_foundation.install(
 )  # then {% extends "mf/base.html" %} and {% import "mf/macros.html" as mf %}
 ```
 
-상태: 0.3.0. receipe가 첫 사용처이며, 쓰면서 클래스를 다듬는다. 실기기(iOS/Android) 검증과 React 대응(컴포넌트 JSX)은 아직 없다.
+상태: 0.3.1. receipe가 첫 사용처이며, 쓰면서 클래스를 다듬는다. 실기기(iOS/Android) 검증과 React 대응(컴포넌트 JSX)은 아직 없다.
 
 ## 공통 품질 검사
 

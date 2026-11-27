@@ -16,3 +16,5 @@
 설치 패키지와 생성 프로젝트에 동일 도구와 안내를 전달한다. Nginx를 실제 실행해 정상→앱 중단→복구, 점검 on/off, API/브라우저 구분, POST 비재전송, 업무 503 보존, 캐시·재시도 헤더를 검사한다. 이 검사를 각 품질 명령과 CI에 연결한다. 브라우저 화면 확인과 엔진/기기 검사는 별도로 보고한다.
 
 참고: [Nginx proxy_intercept_errors](https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_intercept_errors), [HTTP 503](https://www.rfc-editor.org/rfc/rfc9110.html#name-503-service-unavailable).
+
+검사의 임시 HTTP 백엔드는 loopback만 바인딩하고 호스트 이름/DNS에 의존하지 않는다. 준비 대기는 최대 30초이며 자식 프로세스가 먼저 종료하면 종료 코드를 보고해 즉시 실패한다.

@@ -9,5 +9,6 @@ if ! command -v "$uv" >/dev/null 2>&1; then uv="$project_dir/uvw"; fi
 "$uv" run --locked ruff format --check .
 "$uv" run --locked mypy
 "$uv" run --locked pytest
+node --test tests/availability.test.mjs
 "$uv" build
 "$uv" run --locked python scripts/verify_wheel.py --uv "$uv"

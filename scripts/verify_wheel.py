@@ -5,6 +5,7 @@ import os
 import subprocess
 import sys
 import tempfile
+import tomllib
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -14,7 +15,8 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--uv", default="uv")
     args = parser.parse_args()
-    wheels = list((ROOT / "dist").glob("mobile_foundation-*.whl"))
+    version = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]["version"]
+    wheels = list((ROOT / "dist").glob(f"mobile_foundation-{version}-*.whl"))
     if len(wheels) != 1:
         parser.error("Build exactly one current mobile-foundation wheel in dist first")
     env = os.environ.copy()
@@ -53,6 +55,20 @@ Path('page.html').write_text(html)
         subprocess.run(
             [str(python), "-m", "mobile_foundation.quality", "page.html"], check=True, cwd=base, env=env
         )
+        tool = base / "maintenance.pyz"
+        subprocess.run(
+            [str(python), "-m", "mobile_foundation.maintenance", "bundle", str(tool)],
+            check=True,
+            cwd=base,
+            env=env,
+        )
+        subprocess.run(
+            [str(python), str(tool), "export", str(base / "edge"), "--upstream", "http://127.0.0.1:8000"],
+            check=True,
+            cwd=base,
+            env=env,
+        )
+        subprocess.run([str(python), str(tool), "verify"], check=True, cwd=base, env=env)
         print("PASS installed wheel: packaged guide/templates/CSS and rendered markup contract")
 
 

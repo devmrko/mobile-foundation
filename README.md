@@ -13,7 +13,7 @@ mobile_foundation.install(
 )  # then {% extends "mf/base.html" %} and {% import "mf/macros.html" as mf %}
 ```
 
-상태: 0.1.0 초안. receipe가 첫 사용처이며, 쓰면서 클래스를 다듬는다. 실기기(iOS/Android) 검증과 React 대응(컴포넌트 JSX)은 아직 없다.
+상태: 0.3.0. receipe가 첫 사용처이며, 쓰면서 클래스를 다듬는다. 실기기(iOS/Android) 검증과 React 대응(컴포넌트 JSX)은 아직 없다.
 
 ## 공통 품질 검사
 
@@ -29,3 +29,7 @@ GitHub 설정에는 주간 Dependabot 업데이트 제안과 Gitleaks 이력 검
 ## 배포 버전
 
 현재 배포 버전은 0.2.0입니다. 화면은 기존 프레임을 extends하고 매크로·토큰을 조합해 만듭니다. 앱별 업무 흐름·문구는 앱에 유지하며 공통 레이아웃 결함은 원본 Foundation에서 수정합니다. GitHub Release에 wheel/sdist를 제공합니다.
+
+## 점검·배포 중 안내
+
+앱이 중단되어도 정적 안내와 API JSON 503을 제공하는 공통 도구를 포함합니다. 계획된 점검 전환과 열린 화면의 입력 보존 도우미는 [배포 안내](docs/maintenance.md)를 따릅니다.

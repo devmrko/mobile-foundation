@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="ko">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<title>잠시 이용할 수 없습니다 · {{SERVICE}}</title>
+<style>
+*{box-sizing:border-box}body{margin:0;min-height:100svh;display:grid;place-items:center;padding:24px;background:#f5f7fa;color:#192536;font:16px/1.65 system-ui,sans-serif}
+main{width:min(100%,540px);padding:40px;border:1px solid #dce2e9;border-radius:24px;background:#fff;box-shadow:0 12px 48px #19253608}
+.symbol{display:grid;place-items:center;width:56px;height:56px;border-radius:18px;background:#eaf1ff;color:#285bba;font-size:28px}.service{margin:28px 0 8px;color:#526176;font-size:14px;font-weight:650;overflow-wrap:anywhere}
+h1{margin:0 0 16px;font-size:clamp(24px,5vw,32px);line-height:1.35;letter-spacing:-.04em}p{margin:0 0 16px;color:#526176}a{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:10px 22px;border-radius:12px;background:#285bba;color:#fff;text-decoration:none;font-weight:650}a:focus-visible{outline:3px solid #e49a0c;outline-offset:4px}.note{margin:24px 0 0;padding-top:20px;border-top:1px solid #dce2e9;font-size:14px}
+@media(max-width:400px){main{padding:28px 22px}}@media(prefers-color-scheme:dark){body{background:#111823;color:#eef3fa}main{background:#1a2535;border-color:#344256}p,.service{color:#b9c6d8}.symbol{background:#233b60;color:#a9c9ff}.note{border-color:#344256}a{background:#9ec2ff;color:#112844}}
+</style>
+<main>
+  <div class="symbol" aria-hidden="true">↻</div>
+  <p class="service">{{SERVICE}}</p>
+  <h1>잠시 이용할 수 없습니다</h1>
+  <p>서비스 점검 중이거나 연결이 원활하지 않습니다.<br>잠시 후 다시 시도해 주세요.</p>
+  <a href="">다시 시도</a>
+  <p class="note">직전에 저장·결제를 요청하셨다면, 다시 실행하기 전에 처리 결과를 확인해 주세요.</p>
+</main>
+</html>

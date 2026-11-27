@@ -35,3 +35,7 @@ python -m mobile_foundation.quality rendered-page.html
 이 검사는 mf 클래스·ID·라벨/오류 연결·탭·하단 여백 계약을 확인합니다. 실제 클릭·스크롤·화면 잘림·접근성 전체·미적 품질은 브라우저/기기에서 확인합니다. 원본 저장소 자체 변경은 `bash scripts/check-quality.sh`로 검사합니다.
 
 완료 보고에는 사용한 프레임/매크로, 새 구성의 소유 위치, 검사한 상태·화면 폭·명령과 결과, 브라우저/실기기 미확인 범위를 남깁니다. 기존 이슈·PR·설계 문서를 사용하며 다른 개인 기억의 복사본을 만들지 않습니다.
+
+## 배포 점검·앱 중단
+
+앱이 중단된 동안의 안내는 앱 외부 프록시에서 제공합니다. 공통 도구는 `python -m mobile_foundation.maintenance`이며 `export`, `mode on/off`, `verify`를 제공합니다. 생성된 설정의 진입점으로 트래픽을 연결해야 동작합니다. 이미 열린 웹 화면에는 공통 `createAvailability`를 fetch 경계에서 조합하고 기존 입력·게임 상태를 유지합니다. 앱의 쓰기 요청을 자동 재전송하지 않습니다. 배포 도구와 같은 위치의 README에서 Nginx 연결·API JSON 보존·검사 명령을 확인하세요.

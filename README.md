@@ -12,3 +12,7 @@ mobile_foundation.install(app, templates)   # then {% extends "mf/base.html" %} 
 ```
 
 상태: 0.1.0 초안. receipe가 첫 사용처이며, 쓰면서 클래스를 다듬는다. 실기기(iOS/Android) 검증과 React 대응(컴포넌트 JSX)은 아직 없다.
+
+## 공통 품질 검사
+
+공통 구성을 사용하면서 필수 검증이 빠지는 문제를 줄이기 위해 `bash scripts/check-quality.sh`를 실행합니다. 기술별 적용 범위와 수동 확인 항목은 [품질 계약](docs/design/quality-contract.md)에 정리했습니다.

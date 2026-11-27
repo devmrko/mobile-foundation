@@ -5,6 +5,7 @@ import re
 from collections import Counter
 from html.parser import HTMLParser
 from pathlib import Path
+from typing import TypedDict
 
 from mobile_foundation import STATIC_DIR
 
@@ -28,31 +29,37 @@ VOID = frozenset(
 )
 
 
-class Markup(HTMLParser):
-    def __init__(self):
-        super().__init__(convert_charrefs=True)
-        self.nodes = []
-        self.stack = []
+class Node(TypedDict):
+    tag: str
+    attrs: dict[str, str | None]
+    parents: tuple["Node", ...]
 
-    def handle_starttag(self, tag, attrs):
-        node = {"tag": tag, "attrs": dict(attrs), "parents": tuple(self.stack)}
+
+class Markup(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__(convert_charrefs=True)
+        self.nodes: list[Node] = []
+        self.stack: list[Node] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        node: Node = {"tag": tag, "attrs": dict(attrs), "parents": tuple(self.stack)}
         self.nodes.append(node)
         if tag not in VOID:
             self.stack.append(node)
 
-    def handle_startendtag(self, tag, attrs):
+    def handle_startendtag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         self.handle_starttag(tag, attrs)
         if tag not in VOID:
             self.stack.pop()
 
-    def handle_endtag(self, tag):
+    def handle_endtag(self, tag: str) -> None:
         for index in range(len(self.stack) - 1, -1, -1):
             if self.stack[index]["tag"] == tag:
                 del self.stack[index:]
                 break
 
 
-def classes(node):
+def classes(node: Node) -> set[str]:
     return set((node["attrs"].get("class") or "").split())
 
 
@@ -67,7 +74,7 @@ def audit_html(html: str, *, require_frame: bool = False) -> list[str]:
     parser.close()
     nodes = parser.nodes
     issues = []
-    identifiers = Counter(n["attrs"]["id"] for n in nodes if n["attrs"].get("id"))
+    identifiers = Counter(identifier for n in nodes if (identifier := n["attrs"].get("id")))
     for name, count in identifiers.items():
         if count > 1:
             issues.append(f"duplicate-id: {name}")
@@ -86,14 +93,16 @@ def audit_html(html: str, *, require_frame: bool = False) -> list[str]:
                 if base not in own:
                     issues.append(f"missing-base-class: {name} requires {base}")
         refs = (attrs.get("aria-describedby") or "").split()
-        if node["tag"] == "label" and attrs.get("for"):
-            refs.append(attrs["for"])
+        if node["tag"] == "label" and (reference := attrs.get("for")):
+            refs.append(reference)
         for ref in refs:
             if ref not in identifiers:
                 issues.append(f"missing-reference: {ref}")
         if "mf-input" in own:
-            name = attrs.get("id")
-            if not name or not any(n["tag"] == "label" and n["attrs"].get("for") == name for n in nodes):
+            input_id = attrs.get("id")
+            if not input_id or not any(
+                n["tag"] == "label" and n["attrs"].get("for") == input_id for n in nodes
+            ):
                 issues.append("missing-input-label: mf-input requires an id and associated label")
             if attrs.get("aria-invalid") == "true" and not attrs.get("aria-describedby"):
                 issues.append("missing-error-description: invalid mf-input")

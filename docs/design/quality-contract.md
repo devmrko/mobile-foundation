@@ -37,3 +37,9 @@ python -m mobile_foundation.quality rendered-page.html
 `mf-`는 Foundation 전용 클래스 접두사다. 앱 고유 클래스는 다른 접두사를 사용한다. CLI에는 전체 페이지를 전달하며 mf-main이 정확히 한 개 있어야 한다. API에서 부분 부품을 검사할 때는 기본 require_frame=False를 사용하고, 전체 페이지는 require_frame=True로 검사한다. 알 수 없는 클래스, modifier의 기본 클래스 누락, ID 중복, 라벨/설명 참조 누락, 활성 탭 개수, 하단바 본문 여백을 검사한다. 이 검사는 계산된 CSS, 실제 클릭 가능 여부, 화면 잘림이나 미적 완성도를 판단하지 않는다. 브라우저 시각 비교와 키보드·실기기 검증은 별도로 수행한다.
 
 실제 실행 결과: [적용 검증](../reviews/quality-contract-validation.md).
+
+## 개발 검사 보완 (2026-11-27)
+
+렌더 검사를 유지하면서 Ruff 포맷 검사와 배포 패키지의 엄격한 mypy 검사를 공통 명령에 추가한다. HTML 파서의 노드 구조와 공개 install 함수의 타입을 명시하되 FastAPI는 선택 의존성으로 유지한다. 기존 포맷을 한 번 정리하고 이후 불일치를 CI에서 실패시킨다. 검사 실패를 숨기거나 자동 수정한 결과를 CI가 커밋하지 않는다.
+
+Dependabot은 uv 및 GitHub Actions 업데이트를 매주 제안한다. Gitleaks는 전체 Git 이력을 비밀값을 가린 상태로 검사한다. 원격 설정은 기본 브랜치에 반영된 뒤 동작하며 자동 병합은 구성하지 않는다.

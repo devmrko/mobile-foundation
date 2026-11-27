@@ -13,7 +13,9 @@ def px(name: str) -> float:
 
 
 def block(selector: str) -> str:
-    m = re.search(rf"(?:^|\}}|\n){re.escape(selector)}\s*(?:,[^{{]*)?\{{([^}}]*)\}}", components) or re.search(rf"{re.escape(selector)}[^{{]*\{{([^}}]*)\}}", components)
+    m = re.search(
+        rf"(?:^|\}}|\n){re.escape(selector)}\s*(?:,[^{{]*)?\{{([^}}]*)\}}", components
+    ) or re.search(rf"{re.escape(selector)}[^{{]*\{{([^}}]*)\}}", components)
     assert m, f"no rule for {selector}"
     return m.group(1)
 
@@ -57,7 +59,9 @@ def contrast(a: str, b: str) -> float:
 
 def themes() -> dict[str, dict[str, str]]:
     light = dict(re.findall(r"--(mf-[\w-]+):\s*(#[0-9a-fA-F]{6})", tokens.split("@media")[0]))
-    dark = dict(re.findall(r"--(mf-[\w-]+):\s*(#[0-9a-fA-F]{6})", tokens.split(':root[data-theme="dark"]')[1]))
+    dark = dict(
+        re.findall(r"--(mf-[\w-]+):\s*(#[0-9a-fA-F]{6})", tokens.split(':root[data-theme="dark"]')[1])
+    )
     return {"light": light, "dark": {**light, **dark}}
 
 

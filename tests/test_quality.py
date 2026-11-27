@@ -18,7 +18,9 @@ def test_real_gallery_obeys_component_contracts():
 
 
 def test_complete_page_cannot_silently_omit_foundation_frame():
-    assert any(issue.startswith("page-frame:") for issue in audit_html("<main>본문</main>", require_frame=True))
+    assert any(
+        issue.startswith("page-frame:") for issue in audit_html("<main>본문</main>", require_frame=True)
+    )
 
 
 @pytest.mark.parametrize("error", [None, "입력 내용을 확인하세요"])

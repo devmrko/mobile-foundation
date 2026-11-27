@@ -9,3 +9,7 @@
 - Global quality procedure lookup: knowledge `c7085828-a0ad-4b6c-becd-9c65598947ef`; read its current exact revision through vector-knowledge.
 - Public contract changes require docs/design first. Do not commit secrets or generated environments/builds.
 - Keep mf tokens, macros and frames compatible; run installed-wheel verification after packaging changes.
+
+## Feature development
+
+- Before feature work, read src/mobile_foundation/DEVELOPMENT.md for the reuse map, change workflow and completion evidence.

@@ -41,10 +41,19 @@ assert (mf.STATIC_DIR / 'components.css').is_file()
 Path('page.html').write_text(html)
 """
         subprocess.run([str(python), "-c", code], check=True, cwd=base, env=env)
+        guide = subprocess.run(
+            [str(python), "-m", "mobile_foundation.guide"],
+            check=True,
+            cwd=base,
+            env=env,
+            capture_output=True,
+            text=True,
+        )
+        assert "mf/frame_tabs.html" in guide.stdout and "mobile_foundation.quality" in guide.stdout
         subprocess.run(
             [str(python), "-m", "mobile_foundation.quality", "page.html"], check=True, cwd=base, env=env
         )
-        print("PASS installed wheel: packaged templates/CSS and rendered markup contract")
+        print("PASS installed wheel: packaged guide/templates/CSS and rendered markup contract")
 
 
 if __name__ == "__main__":
